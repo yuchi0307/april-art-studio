@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>畫室管理系統（測試） 使用手冊</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+TC:wght@400;600;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #4a3040;
+    --paper: #fdf4f5;
+    --warm: #fce8ec;
+    --accent: #c97a8a;
+    --rose: #e8a4b0;
+    --sage: #9cb08a;
+    --gold: #d4956a;
+    --muted: #b09aa0;
+    --border: #f0d0d8;
+    --cream: #fdf8f0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Noto Serif TC', serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    background-image: radial-gradient(circle at 10% 10%, #fce8ec 0%, transparent 40%),
+                      radial-gradient(circle at 90% 90%, #f0e8f5 0%, transparent 40%);
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #c97a8a 0%, #d4956a 100%);
+    color: #fff;
+    padding: 48px 28px 40px;
+    text-align: center;
+  }
+  .hero-icon { font-size: 48px; margin-bottom: 12px; }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .hero-sub { font-size: 14px; opacity: 0.85; }
+
+  /* TOC */
+  .toc {
+    background: #fff;
+    margin: 20px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    padding: 20px 24px;
+    box-shadow: 0 4px 16px rgba(201,122,138,0.08);
+  }
+  .toc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 6px; }
+  .toc-list a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toc-list a:hover { color: var(--accent); }
+  .toc-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    width: 20px;
+  }
+
+  /* SECTIONS */
+  .section { padding: 0 16px 8px; }
+  .section-anchor { padding-top: 8px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-top: 8px;
+  }
+  .section-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #fce8ec, #f0e8f5);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--accent);
+  }
+  .section-sub { font-size: 12px; color: var(--muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* CARD */
+  .card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(201,122,138,0.06);
+  }
+
+  /* STEPS */
+  .steps { list-style: none; }
+  .steps li {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, #e8a4b0, #c97a8a);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; font-size: 14px; }
+  .step-content strong { display: block; font-size: 15px; margin-bottom: 3px; }
+
+  /* MOCKUP */
+  .mockup {
+    background: var(--warm);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .mockup-bar {
+    background: linear-gradient(135deg, #c97a8a, #d4956a);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .mockup-row {
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid var(--border);
+  }
+  .mockup-name { font-weight: 700; font-size: 14px; }
+  .mockup-dots { display: flex; gap: 3px; align-items: center; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot.filled { background: var(--sage); }
+  .dot.empty { background: var(--border); }
+  .mockup-btns { display: flex; gap: 5px; }
+  .mockup-btn {
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--muted);
+    background: none;
+  }
+  .mockup-btn.on { background: var(--sage); border-color: var(--sage); color: #fff; }
+
+  .mockup-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .mockup-stat {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .mockup-stat-num { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--accent); }
+  .mockup-stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  .mockup-bottom-nav {
+    display: flex;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .mockup-nav-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .mockup-nav-item.active { color: var(--accent); font-weight: 700; }
+  .mockup-nav-icon { font-size: 16px; display: block; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .badge-rose { background: #fce8ec; color: var(--accent); }
+  .badge-sage { background: #d4edda; color: #2d6a4f; }
+  .badge-gold { background: #fff3c4; color: #a07800; }
+  .badge-blue { background: #dbeafe; color: #2563eb; }
+  .badge-gray { background: #f0ece6; color: #888; }
+
+  /* TIP */
+  .tip {
+    background: #fff8f0;
+    border: 1.5px solid #f5d0a8;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .tip-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 24px 0;
+  }
+
+  /* STATUS TABLE */
+  .status-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .status-table th { background: var(--warm); padding: 8px 12px; text-align: left; font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .status-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .status-table tr:last-child td { border-bottom: none; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .footer-flower { font-size: 28px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-icon">🌸</div>
+  <div class="hero-title">畫室管理系統<br>使用手冊</div>
+  <div class="hero-sub">讓AI幫助我們更專注在畫畫跟🍑上！（😻？</div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-title">目錄</div>
+  <ul class="toc-list">
+    <li><a href="#intro"><span class="toc-num">01</span>系統介紹</a></li>
+    <li><a href="#dashboard"><span class="toc-num">02</span>總覽頁面</a></li>
+    <li><a href="#attendance"><span class="toc-num">03</span>點名</a></li>
+    <li><a href="#renewal"><span class="toc-num">04</span>續報與收款</a></li>
+    <li><a href="#makeup"><span class="toc-num">05</span>補課安排</a></li>
+    <li><a href="#leave"><span class="toc-num">06</span>請假記錄</a></li>
+    <li><a href="#sheet"><span class="toc-num">07</span>管理學員名單</a></li>
+  </ul>
+</div>
+
+<!-- 01 INTRO -->
+<div class="section section-anchor" id="intro">
+  <div class="section-header">
+    <div class="section-icon">✨</div>
+    <div>
+      <div class="section-title">系統介紹</div>
+      <div class="section-sub">01 / overview</div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;margin-bottom:14px;">這個系統幫美麗的小簡老師管理四個班的學員出席、補課、請假和收款，所有資料都自動存到美麗的小簡老師的 Google 試算表，隨時可以查看。</p>
+    <div class="mockup">
+      <div class="mockup-bar">🌸 畫室管理</div>
+      <div class="mockup-bottom-nav">
+        <div class="mockup-nav-item active"><span class="mockup-nav-icon">🏠</span>總覽</div>
+        <div class="mockup-nav-item"><span class="mockup-nav-icon">✏️</span>點名</div>
+        <div class="mockup-nav-item"><span class="mockup-nav-icon">💰</span>收款</div>
+        <div class="mockup-nav-item"><span class="mockup-nav-icon">📅</span>補課</div>
+        <div class="mockup-nav-item"><span class="mockup-nav-icon">🗒️</span>請假</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-top:8px;">底部五個按鈕切換不同功能頁面</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">📱</div>
+    <div style="font-size:13px;">建議把網址存成手機桌面捷徑，用起來就像 App 一樣方便。iPhone 請用 Safari 開啟，點「分享」→「加入主畫面」。</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 02 DASHBOARD -->
+<div class="section section-anchor" id="dashboard">
+  <div class="section-header">
+    <div class="section-icon">🏠</div>
+    <div>
+      <div class="section-title">總覽</div>
+      <div class="section-sub">02 / dashboard</div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;margin-bottom:14px;">打開系統第一眼看到的頁面，顯示本期最重要的資訊。</p>
+    <div class="mockup">
+      <div class="mockup-stat-row">
+        <div class="mockup-stat"><div class="mockup-stat-num" style="color:var(--ink);">27</div><div class="mockup-stat-label">學員總數</div></div>
+        <div class="mockup-stat"><div class="mockup-stat-num" style="color:var(--gold);">2</div><div class="mockup-stat-label">需詢問續報</div></div>
+        <div class="mockup-stat"><div class="mockup-stat-num" style="color:var(--sage);">1</div><div class="mockup-stat-label">已收款</div></div>
+        <div class="mockup-stat"><div class="mockup-stat-num" style="color:var(--accent);">1</div><div class="mockup-stat-label">待收款</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;font-weight:700;margin-bottom:10px;">數字代表什麼？</p>
+    <table class="status-table">
+      <tr><th>項目</th><th>說明</th></tr>
+      <tr><td>需詢問續報</td><td>已上到第 6 堂，記得詢問是否要繼續</td></tr>
+      <tr><td>已收款</td><td>本期 8 堂已滿並收到續報款</td></tr>
+      <tr><td>待收款</td><td>本期 8 堂已滿但尚未收款</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 03 ATTENDANCE -->
+<div class="section section-anchor" id="attendance">
+  <div class="section-header">
+    <div class="section-icon">✏️</div>
+    <div>
+      <div class="section-title">點名</div>
+      <div class="section-sub">03 / attendance</div>
+    </div>
+  </div>
+  <div class="card">
+    <ul class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>選擇今天的班次</strong>點選上方的班次按鈕（週二、週四、週日下午、週日晚上），右上角會自動顯示該班上課日期。</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>為每位學員標記狀態</strong>每人有三個按鈕可以選擇。</div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>堂數自動累計</strong>標記「出席」後，學員的進度點點會自動增加，資料即時存到 Google 試算表。</div>
+      </li>
+    </ul>
+    <div class="mockup">
+      <div class="mockup-row">
+        <div>
+          <div class="mockup-name">道明寺</div>
+          <div class="mockup-dots">
+            <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div>
+            <div class="dot filled"></div><div class="dot filled"></div><div class="dot empty"></div>
+            <div class="dot empty"></div><div class="dot empty"></div>
+            <span style="font-size:10px;color:var(--muted);margin-left:4px;">5/8</span>
+          </div>
+        </div>
+        <div class="mockup-btns">
+          <div class="mockup-btn on">出席</div>
+          <div class="mockup-btn">請假</div>
+          <div class="mockup-btn">缺席</div>
+        </div>
+      </div>
+      <div class="mockup-row">
+        <div>
+          <div class="mockup-name" style="display:flex;align-items:center;gap:6px;">花澤類 <span class="badge badge-gold" style="font-size:10px;">詢問續報</span></div>
+          <div class="mockup-dots">
+            <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div>
+            <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled" style="background:var(--gold)"></div>
+            <div class="dot empty"></div><div class="dot empty"></div>
+            <span style="font-size:10px;color:var(--muted);margin-left:4px;">6/8</span>
+          </div>
+        </div>
+        <div class="mockup-btns">
+          <div class="mockup-btn">出席</div>
+          <div class="mockup-btn">請假</div>
+          <div class="mockup-btn">缺席</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;font-weight:700;margin-bottom:10px;">狀態說明</p>
+    <table class="status-table">
+      <tr><th>狀態</th><th>說明</th><th>堂數</th></tr>
+      <tr><td><span class="badge badge-sage">出席</span></td><td>有來上課</td><td>+1 堂</td></tr>
+      <tr><td><span class="badge badge-gold">請假</span></td><td>有事先告知</td><td>不計算</td></tr>
+      <tr><td><span class="badge" style="background:#ffe4e1;color:#c0392b;">缺席</span></td><td>沒來也沒說</td><td>不計算</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;font-weight:700;margin-bottom:10px;">特別標記</p>
+    <table class="status-table">
+      <tr><th>標記</th><th>說明</th></tr>
+      <tr><td><span class="badge badge-gold">詢問續報</span></td><td>已上第 6 堂，提醒美麗的小簡老師詢問</td></tr>
+      <tr><td><span class="badge" style="background:#ffe4e1;color:#c0392b;">滿堂</span></td><td>本期 8 堂已滿</td></tr>
+      <tr><td><span class="badge badge-blue">補課</span></td><td>今天來補課的學員（藍色背景）</td></tr>
+      <tr><td><span class="badge badge-gold">已請假</span></td><td>已提前登記請假，自動預填</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;font-weight:700;margin-bottom:10px;">老師請假時</p>
+    <ul class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">點右上角「老師請假」按鈕</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">頁面出現提醒橫幅，提示美麗的小簡老師記得通知學員</div>
+      </li>
+    </ul>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">💡</div>
+    <div style="font-size:13px;">點名資料當天有效，隔天打開系統會自動清空，重新開始點名。</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 04 RENEWAL -->
+<div class="section section-anchor" id="renewal">
+  <div class="section-header">
+    <div class="section-icon">💰</div>
+    <div>
+      <div class="section-title">續報與收款</div>
+      <div class="section-sub">04 / renewal & payment</div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;margin-bottom:14px;">列出所有已上到第 6 堂以上的學員，方便追蹤續報和收款進度。</p>
+    <ul class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>第 6 堂</strong>點名時系統自動提醒，此頁面顯示「詢問中」狀態</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>第 8 堂滿堂</strong>顯示「待收款」，出現「✓ 收款」按鈕</div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>收到轉帳後</strong>按「✓ 收款」→ 確認 → 狀態變為「已收款」，自動記錄收款日期</div>
+      </li>
+    </ul>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">💡</div>
+    <div style="font-size:13px;">收款記錄也會同步到 Google 試算表的「收款」分頁，可以隨時查閱。</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 05 MAKEUP -->
+<div class="section section-anchor" id="makeup">
+  <div class="section-header">
+    <div class="section-icon">📅</div>
+    <div>
+      <div class="section-title">補課安排</div>
+      <div class="section-sub">05 / makeup class</div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;margin-bottom:14px;">當學員告知要補課時，在這裡記錄。補課當天學員會自動出現在點名頁面。</p>
+    <ul class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>新增補課記錄</strong>點「＋ 新增補課記錄」→ 先選原本班次 → 學員自動篩出 → 選補課目標班次（若選週日，再選下午或晚上）→ 選補課日期</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>排好日期後</strong>按「排好了」→ 狀態變為「已確認」</div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>補課當天</strong>學員自動出現在點名頁面（藍色背景），標記「出席」後，補課狀態自動變「已完成」</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;font-weight:700;margin-bottom:10px;">補課狀態</p>
+    <table class="status-table">
+      <tr><th>狀態</th><th>說明</th></tr>
+      <tr><td><span class="badge badge-blue">待安排</span></td><td>知道要補課，日期還沒確定。可按「編輯」修改或刪除。</td></tr>
+      <tr><td><span class="badge badge-gold">已確認</span></td><td>日期確定，等待補課</td></tr>
+      <tr><td><span class="badge badge-sage">已完成</span></td><td>補課已上完</td></tr>
+    </table>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">✨</div>
+    <div style="font-size:13px;">待安排的補課記錄可以編輯或刪除，已確認之後只能等補課完成。</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 06 LEAVE -->
+<div class="section section-anchor" id="leave">
+  <div class="section-header">
+    <div class="section-icon">🗒️</div>
+    <div>
+      <div class="section-title">請假記錄</div>
+      <div class="section-sub">06 / leave management</div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;margin-bottom:14px;">當學員提前告知要請假時，在這裡登記。到了上課當天，點名頁面會自動幫該學員預填「請假」狀態。</p>
+    <ul class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>新增請假</strong>點「＋ 新增請假」→ 選班次 → 選學員 → 選請假日期</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>上課當天</strong>點名頁面自動顯示「已請假」標籤，不需要手動標記</div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>刪除記錄</strong>若學員臨時改變，可按「刪除」移除請假記錄</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 07 SHEET -->
+<div class="section section-anchor" id="sheet">
+  <div class="section-header">
+    <div class="section-icon">📊</div>
+    <div>
+      <div class="section-title">管理學員名單</div>
+      <div class="section-sub">07 / manage students</div>
+    </div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;margin-bottom:14px;">學員名單在 Google 試算表的「學員」分頁直接管理，不需要在系統裡操作。</p>
+    <ul class="steps">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>新增學員</strong>在「學員」分頁最下方新增一列，填入 student_id（流水號）、name（名字）、class（班次）、active（TRUE）</div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>學員暫停或離開</strong>把該學員的 active 欄位改成 FALSE，系統就不會顯示她，但資料保留</div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>班次名稱</strong>只能填這四種：週二、週四、週日下午、週日晚上</div>
+      </li>
+    </ul>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;font-weight:700;margin-bottom:10px;">Google 試算表分頁說明</p>
+    <table class="status-table">
+      <tr><th>分頁名稱</th><th>內容</th></tr>
+      <tr><td>學員</td><td>所有學員的基本資料</td></tr>
+      <tr><td>上課紀錄</td><td>每次點名的記錄</td></tr>
+      <tr><td>補課</td><td>所有補課安排記錄</td></tr>
+      <tr><td>收款</td><td>續報收款記錄</td></tr>
+      <tr><td>請假紀錄</td><td>提前登記的請假</td></tr>
+    </table>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">⚠️</div>
+    <div style="font-size:13px;">修改試算表後請重新整理系統頁面，才會讀取最新資料。</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-flower">🌸</div>
+  <p>有使用上的問題可以隨時跟我說！目前只有基本功能，想要進階也可以許願！我們一起來試試看(´∀｀*)</p>
+  <p style="margin-top:4px;color:var(--border);">♡</p>
+</div>
+
+</body>
+</html>
