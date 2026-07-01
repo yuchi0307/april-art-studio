@@ -423,6 +423,18 @@
   </div>
 </div>
 
+<!-- MODAL: reset sessions -->
+<div class="modal-overlay" id="modal-reset">
+  <div class="modal">
+    <div class="modal-title" id="modal-reset-title">開始新一期</div>
+    <div class="modal-sub" id="modal-reset-sub"></div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeModal('modal-reset')">取消</button>
+      <button class="btn-modal-confirm" onclick="confirmReset()">確認開始新一期</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: confirm paid -->
 <div class="modal-overlay" id="modal-paid">
   <div class="modal">
@@ -439,8 +451,8 @@
 
 <script>
 //const API = 'https://script.google.com/macros/s/AKfycbxrYGG1KdbSwHyxv9Ie6TGn5KXx9a5WCQ8M3n7m0ChOczMcKibVW8wJSfjmW7qJOHVQJg/exec';
+//const API = 'https://script.google.com/macros/s/AKfycbyXuoM9pzyftXAlrFig0NaYWmfsIAxUKvrVdoFPcirJ2LoODpBRGhUWlvhlZz06rJkbUg/exec';
   const API = 'https://script.google.com/macros/s/AKfycbyuwNdKctpsAI-Yp978eKHjalU3zJmr3Reo3ZbtPiNthScWA4rgIZwj_OEkADZNgikejg/exec';
-
 // ── State ─────────────────────────────────────
 let students = [];
 let sessions = [];
@@ -550,7 +562,8 @@ async function init() {
 
 // ── Session count per student ─────────────────
 function getSessionCount(studentId) {
-  return sessions.filter(s => s.student_id == studentId && s.status === 'present').length;
+  const count = sessions.filter(s => s.student_id == studentId && s.status === 'present').length;
+  return Math.min(count, 8);
 }
 
 function isPaid(studentId) {
@@ -587,6 +600,7 @@ function renderDashboard() {
         <div class="alert-detail">本期 8 堂已滿</div>
       </div>
       <span class="badge ${isPaid(s.student_id)?'badge-sage':'badge-accent'}">${isPaid(s.student_id)?'✓ 已收款':'待收款'}</span>
+      ${isPaid(s.student_id) ? `<button class="btn-sm" style="border-color:var(--rose);color:var(--accent);font-size:11px;" onclick="openResetModal(${s.student_id},'${s.name}')">新一期</button>` : ''}
     </div>`).join('') : '<div style="font-size:13px;color:var(--muted);padding:8px 0;">目前沒有滿堂學員</div>';
 }
 
@@ -683,6 +697,11 @@ function setStatus(studentId, status) {
 
   // 樂觀更新：先算出新堂數給畫面用
   if (newStatus === 'present') {
+    const currentCount = getSessionCount(studentId);
+    if (currentCount >= 8) {
+      toast('⚠️ 這位學員本期已滿 8 堂');
+      return;
+    }
     sessions = [...sessions, { student_id: studentId, status: 'present' }];
   } else if (prev === 'present') {
     const idx = sessions.map((s,i)=>({s,i})).reverse().find(({s})=>s.student_id==studentId && s.status==='present');
@@ -743,7 +762,9 @@ function renderRenewal() {
       ? `<span class="badge badge-sage">✓ 已收款</span>`
       : isFull ? `<span class="badge badge-accent">待收款</span>`
                : `<span class="badge badge-gold">詢問中</span>`;
-    const action = paid ? '' : `<button class="btn-sm sage" onclick="openPaidModal(${s.student_id},'${s.name}')">✓ 收款</button>`;
+    const action = paid
+      ? `<button class="btn-sm" style="border-color:var(--rose);color:var(--accent);" onclick="openResetModal(${s.student_id},'${s.name}')">開始新一期</button>`
+      : `<button class="btn-sm sage" onclick="openPaidModal(${s.student_id},'${s.name}')">✓ 收款</button>`;
     return `
     <div class="renewal-item">
       <div class="renewal-info">
@@ -754,6 +775,35 @@ function renderRenewal() {
       <div class="renewal-actions">${action}</div>
     </div>`;
   }).join('');
+}
+
+let pendingResetStudent = null;
+
+function openResetModal(studentId, name) {
+  pendingResetStudent = studentId;
+  document.getElementById('modal-reset-title').textContent = `開始新一期 — ${name}`;
+  document.getElementById('modal-reset-sub').textContent = `確認後 ${name} 的堂數將歸零，重新開始累計新一期的 8 堂。`;
+  document.getElementById('modal-reset').classList.add('show');
+}
+
+async function confirmReset() {
+  try {
+    // Optimistic: remove present sessions for this student locally
+    sessions = sessions.filter(s => !(s.student_id == pendingResetStudent && s.status === 'present'));
+    payments = payments.filter(p => p.student_id != pendingResetStudent);
+    closeModal('modal-reset');
+    renderRenewal();
+    renderDashboard();
+    toast('✓ 已開始新一期，堂數歸零');
+    await apiPost({ action: 'resetSessions', student_id: pendingResetStudent });
+    sessions = await apiGet('getSessions');
+    payments = await apiGet('getPayments');
+    renderRenewal();
+    renderDashboard();
+    renderAttendance();
+  } catch(e) {
+    toast('⚠️ 重設失敗，請檢查網路');
+  }
 }
 
 function openPaidModal(studentId, name) {
