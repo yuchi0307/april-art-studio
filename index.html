@@ -481,9 +481,6 @@ async function apiGet(action) {
 async function apiPost(data) {
   const res = await fetch(API, {
     method: 'POST',
-    headers: {
-    'Content-Type': 'application/json' // 👈 這行是造成瀏覽器CORS問題的罪魁禍0701
-    },
     body: JSON.stringify(data)
   });
   return res.json();
